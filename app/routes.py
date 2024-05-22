@@ -198,12 +198,7 @@ def get_weather_history(location):
             'units': 'metric'
         }
         
-        # Build the full URL with parameters
         request_url = requests.Request('GET', history_url, params=history_params).prepare().url
-        
-        # Debug output
-        print(f"Requesting weather history for {location} from {timestamp}")
-        print(f"URL: {request_url}")
         
         response = requests.get(request_url)
         
