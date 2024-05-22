@@ -165,9 +165,10 @@ def get_weather_history(location):
     api_key = current_app.config['WEATHER_API_KEY']
     history_url = current_app.config['WEATHER_HISTORY_URL']
     
+    # Get current time and ensure we are getting data for the same hour each day
     end_time = datetime.utcnow()
-    start_time = end_time - timedelta(days=5)
     
+    # Get coordinates for the location
     geocode_url = "http://api.openweathermap.org/geo/1.0/direct"
     geocode_params = {'q': location, 'appid': api_key}
     geocode_response = requests.get(geocode_url, params=geocode_params)
@@ -184,18 +185,29 @@ def get_weather_history(location):
 
     history_data = []
     for days_ago in range(1, 6):
-        dt = int((end_time - timedelta(days=days_ago)).timestamp())
+        dt = end_time - timedelta(days=days_ago)
+        timestamp = int(dt.timestamp())
+        
         history_params = {
             'lat': lat,
             'lon': lon,
             'type': 'hour',
-            'start': dt,
+            'start': timestamp,
             'cnt': 1,
             'appid': api_key,
             'units': 'metric'
         }
-        response = requests.get(history_url, params=history_params)
         
+        # Build the full URL with parameters
+        request_url = requests.Request('GET', history_url, params=history_params).prepare().url
+        
+        # Debug output
+        print(f"Requesting weather history for {location} from {timestamp}")
+        print(f"URL: {request_url}")
+        
+        response = requests.get(request_url)
+        
+        print(f"API Response: {response.status_code}")
         if response.status_code == 200:
             data = response.json()
             if 'list' in data:
