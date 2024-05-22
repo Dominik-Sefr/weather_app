@@ -429,5 +429,29 @@
         "email": "test@example.com",
         "password_hash": "scrypt:32768:8:1$OXHrBnSGXVpmMWxg$e38dede59a4687596a5c8db41935caddbc9e99a27bc1810d6196eba333632445e23f178a47b003ade4243abc3bd330dfa291bc79b900f8ceab295989145e3344",
         "is_subscribed": false
+    },
+    "73": {
+        "username": "testuser",
+        "email": "test@example.com",
+        "password_hash": "scrypt:32768:8:1$YE7bjQzh14FIAIOU$d752ac7883653183f61cb94caf3293d3482e16780a8dee13e489672d262dd4217def374c42e8eaddb8a702239a4129559e8601797c662b788004cb01b4fcd9f6",
+        "is_subscribed": false
+    },
+    "74": {
+        "username": "testuser",
+        "email": "test@example.com",
+        "password_hash": "scrypt:32768:8:1$1hQu7kQmJDev9q0P$a5efb1eb857ce46fcf6ca46c07333b1ae93230bee89b75ec73cbdd2789e768c4418ddd8d3123b416e31a6191bf5d0f75ccfdf8fb19ab3adafd38f94106b93b35",
+        "is_subscribed": false
+    },
+    "75": {
+        "username": "testuser",
+        "email": "test@example.com",
+        "password_hash": "scrypt:32768:8:1$VBJx0z2fEByeOvgK$85c9cfbbfc5ac46813cc2801712ed71211fbb8af0bd28af7159a046eb6628962d818230527d91fcd1035ca147598c66394f8320862ff49a8620950b12a58e27b",
+        "is_subscribed": false
+    },
+    "76": {
+        "username": "testuser",
+        "email": "test@example.com",
+        "password_hash": "scrypt:32768:8:1$uHuJc9FFZx2RkE5e$5886912688b7e5384ddf6808f7197f2f3c109b9db8e95ace052741c831cbde0e69ac5bb09a78bb097f89608c670d07f7e5528e4ecbd094313c1e79912c1d7c55",
+        "is_subscribed": false
     }
 }
