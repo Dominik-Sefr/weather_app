@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorites</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Favorites</h1>
+        <form action="{{ url_for('main.favorites') }}" method="post">
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" required>
+            <label for="country">Country:</label>
+            <input type="text" id="country" name="country" required>
+            <button type="submit">Add Favorite</button>
+        </form>
+        <h2>Your Favorite Locations</h2>
+        <ul>
+            {% for favorite in favorite_weather %}
+                <li>
+                    <p>{{ favorite.city }}, {{ favorite.country }}
+                        <form action="{{ url_for('main.delete_favorite') }}" method="post" style="display:inline;">
+                            <input type="hidden" name="city" value="{{ favorite.city }}">
+                            <input type="hidden" name="country" value="{{ favorite.country }}">
+                            <button type="submit" style="background:none;border:none;color:red;font-size:1.2em;cursor:pointer;">&times;</button>
+                        </form>
+                    </p>
+                    {% if favorite.weather.error %}
+                        <p>{{ favorite.weather.error }}</p>
+                    {% else %}
+                        <p>Temperature: {{ favorite.weather.main.temp }}°C</p>
+                        <p>Description: {{ favorite.weather.weather[0].description }}</p>
+                    {% endif %}
+                    <h3>Weather History</h3>
+                    <ul>
+                        {% for record in favorite.history %}
+                            {% if record.dt %}
+                                <li>
+                                    <p>Date: {{ record.dt | datetimeformat }}</p>
+                                    <p>Temperature: {{ record.main.temp }}°C</p>
+                                    <p>Description: {{ record.weather[0].description }}</p>
+                                </li>
+                            {% else %}
+                                <li>{{ record.weather[0].description }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{{ url_for('main.index') }}">Back to Home</a>
+    </div>
+</body>
+</html>

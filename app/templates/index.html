@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Weather</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Current Weather</h1>
+        <form id="weather-form">
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location">
+            <button type="submit">Get Weather</button>
+        </form>
+        <div id="weather-result"></div>
+
+        <div class="navigation">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('auth.logout') }}">Logout</a>
+                <form action="{{ url_for('main.subscribe') }}" method="post" style="display:inline;">
+                    {% if current_user.is_subscribed %}
+                        <button type="submit">Unsubscribe</button>
+                    {% else %}
+                        <button type="submit">Subscribe</button>
+                    {% endif %}
+                </form>
+                <a href="{{ url_for('main.favorites') }}">Favorites</a>
+                <a href="{{ url_for('main.history') }}">History</a>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}">Login</a>
+                <a href="{{ url_for('auth.register') }}">Register</a>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        document.getElementById('weather-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const location = document.getElementById('location').value;
+            fetch(`/api/current_weather?location=${location}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Weather Data:', data); // Debug output to console
+                    const resultDiv = document.getElementById('weather-result');
+                    if (data.error) {
+                        resultDiv.innerHTML = `<p>${data.error}</p>`;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <p>City: ${data.name}</p>
+                            <p>Temperature: ${data.main.temp}°C</p>
+                            <p>Description: ${data.weather[0].description}</p>
+                        `;
+                    }
+                });
+        });
+
+        // Automatically get weather for the user's current location on page load
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                fetch(`/api/current_weather?lat=${lat}&lon=${lon}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Weather Data:', data); // Debug output to console
+                        const resultDiv = document.getElementById('weather-result');
+                        if (data.error) {
+                            resultDiv.innerHTML = `<p>${data.error}</p>`;
+                        } else {
+                            resultDiv.innerHTML = `
+                                <p>City: ${data.name}</p>
+                                <p>Temperature: ${data.main.temp}°C</p>
+                                <p>Description: ${data.weather[0].description}</p>
+                            `;
+                        }
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
