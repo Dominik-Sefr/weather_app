@@ -3,7 +3,17 @@ from app import create_app
 from flask import g, session
 from datetime import datetime, timedelta
 import json
+import sys
+import os
 
+# Přidání cesty k projektu, aby pytest našel modul `app`
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from app import create_app
+
+def test_app_creation():
+    app = create_app()
+    assert app is not None
 @pytest.fixture
 def client():
     app = create_app()

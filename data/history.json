@@ -939,6 +939,27 @@
             "temperature": 19.98,
             "description": "overcast clouds",
             "date": "2024-05-21 18:29:55"
+        },
+        {
+            "city": "Hr\u00e1dek nad Nisou",
+            "country": "CZ",
+            "temperature": 13.65,
+            "description": "broken clouds",
+            "date": "2024-05-22 20:26:44"
+        },
+        {
+            "city": "Liberec",
+            "country": "CZ",
+            "temperature": 13.12,
+            "description": "scattered clouds",
+            "date": "2024-05-22 20:26:45"
+        },
+        {
+            "city": "Poraj\u00f3w",
+            "country": "CZ",
+            "temperature": 13.92,
+            "description": "broken clouds",
+            "date": "2024-05-22 20:26:47"
         }
     ],
     "3": [
