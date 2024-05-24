@@ -27,24 +27,16 @@ def current_weather():
     
     return jsonify(weather_data)
 
-@bp.route('/api/weather_forecast', methods=['GET'])
-def weather_forecast():
-    location = request.args.get('location')
-    forecast_data = get_forecast_data(location)
-    return jsonify(forecast_data)
-
 @bp.route('/favorites', methods=['GET', 'POST'])
 @login_required
 def favorites():
     if not current_user.is_subscribed:
-        flash('You must be subscribed to access favorites.', 'warning')
         return redirect(url_for('main.index'))
     
     if request.method == 'POST':
         city = request.form['city']
         country = request.form['country']
         FavoriteLocation.add(current_user.id, city, country)
-        flash('Favorite location added successfully!', 'success')
 
     favorites = FavoriteLocation.get_by_user_id(current_user.id)
     favorite_weather = []
@@ -66,7 +58,6 @@ def delete_favorite():
     city = request.form['city']
     country = request.form['country']
     FavoriteLocation.delete(current_user.id, city, country)
-    flash('Favorite location deleted successfully!', 'success')
     return redirect(url_for('main.favorites'))
 
 @bp.route('/history', methods=['GET'])
@@ -79,14 +70,12 @@ def history():
 @login_required
 def subscribe():
     current_user.subscribe()
-    flash('You have subscribed successfully!', 'success')
     return redirect(url_for('main.index'))
 
 @bp.route('/unsubscribe', methods=['POST'])
 @login_required
 def unsubscribe():
     current_user.unsubscribe()
-    flash('You have unsubscribed successfully!', 'success')
     return redirect(url_for('main.index'))
 
 def get_weather_data(location=None, lat=None, lon=None):
@@ -121,12 +110,6 @@ def get_weather_data(location=None, lat=None, lon=None):
         WeatherHistory.add(current_user.id, city_name, country, temperature, description, date)
     
     return data
-
-def get_forecast_data(location):
-    api_key = current_app.config['WEATHER_API_KEY']
-    api_url = current_app.config['WEATHER_API_URL']
-    response = requests.get(f'{api_url}/forecast', params={'q': location, 'appid': api_key, 'units': 'metric'})
-    return response.json()
 
 def get_weather_data(location=None, lat=None, lon=None):
     api_key = current_app.config['WEATHER_API_KEY']

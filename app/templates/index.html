@@ -19,7 +19,7 @@
         <div class="navigation">
             {% if current_user.is_authenticated %}
                 <a href="{{ url_for('auth.logout') }}">Logout</a>
-                <form action="{{ url_for('main.subscribe') }}" method="post" style="display:inline;">
+                <form action="{% if current_user.is_subscribed %}{{ url_for('main.unsubscribe') }}{% else %}{{ url_for('main.subscribe') }}{% endif %}" method="post" style="display:inline;">
                     {% if current_user.is_subscribed %}
                         <button type="submit">Unsubscribe</button>
                     {% else %}
