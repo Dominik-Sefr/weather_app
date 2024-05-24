@@ -1,4 +1,4 @@
-name: Build, test, and deploy Python app to Azure Web App - sefrSTIN
+name: Build and deploy Python app to Azure Web App - sefrSTIN
 
 on:
   push:
@@ -25,28 +25,20 @@ jobs:
       
       - name: Install dependencies
         run: |
-          source venv/bin/activate
           pip install -r requirements.txt
+          pip install coverage
 
       - name: Run tests with coverage
         run: |
           source venv/bin/activate
           coverage run -m pytest
-          coverage html
+          coverage report
           coverage xml
-
-      - name: Upload test coverage report
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-report
-          path: |
-            htmlcov
-            coverage.xml
 
       - name: Zip artifact for deployment
         run: |
-          source venv/bin/activate
           zip release.zip ./* -r
+          !venv/
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
@@ -54,7 +46,6 @@ jobs:
           name: python-app
           path: |
             release.zip
-            !venv/
 
   deploy:
     runs-on: ubuntu-latest
@@ -63,7 +54,7 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write # This is required for requesting the JWT
+      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
