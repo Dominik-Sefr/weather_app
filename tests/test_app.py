@@ -1,9 +1,11 @@
 import pytest
 from app import create_app
-from flask import g, session
+from flask import g, session, current_app
 from datetime import datetime, timedelta
 import json
+from unittest.mock import patch
 from app.models import User, FavoriteLocation, WeatherHistory
+from app.routes import get_weather_history, get_weather_data
 
 @pytest.fixture
 def client():
@@ -181,3 +183,119 @@ def test_weather_history_model():
     assert history[0]['temperature'] == 20.0
     assert history[0]['description'] == 'sunny'
     assert isinstance(history[0]['date'], datetime)
+
+# Additional tests for get_weather_history function
+
+def test_get_weather_history_success(client):
+    location = 'Test Location'
+    
+    geocode_response = [{'lat': 10.0, 'lon': 20.0}]
+    history_response = {
+        'list': [{
+            'dt': int((datetime.utcnow() - timedelta(days=1)).timestamp()),
+            'main': {'temp': 25},
+            'weather': [{'description': 'Clear sky'}]
+        }]
+    }
+    
+    with client.application.app_context():
+        with patch('requests.get') as mock_get:
+            # Mock the geocode response
+            mock_get.side_effect = [
+                MockResponse(geocode_response, 200),
+                MockResponse(history_response, 200),
+                MockResponse(history_response, 200),
+                MockResponse(history_response, 200),
+                MockResponse(history_response, 200),
+                MockResponse(history_response, 200)
+            ]
+            
+            result = get_weather_history(location)
+
+            assert len(result) > 0
+            assert result[0]['dt'] is not None
+            assert result[0]['main']['temp'] == 25
+            assert result[0]['weather'][0]['description'] == 'Clear sky'
+
+def test_get_weather_history_no_geocode_data(client):
+    location = 'Invalid Location'
+    
+    with client.application.app_context():
+        with patch('requests.get') as mock_get:
+            # Mock the geocode response with no data
+            mock_get.side_effect = [
+                MockResponse([], 200)
+            ]
+            
+            result = get_weather_history(location)
+
+            assert result == [{'dt': None, 'temp': None, 'weather': [{'description': 'No data available'}]}]
+
+def test_get_weather_history_invalid_location(client):
+    location = 'Invalid Location'
+    
+    geocode_response = [{'lat': None, 'lon': None}]
+    
+    with client.application.app_context():
+        with patch('requests.get') as mock_get:
+            # Mock the geocode response with invalid data
+            mock_get.side_effect = [
+                MockResponse(geocode_response, 200)
+            ]
+            
+            result = get_weather_history(location)
+
+            assert result == [{'dt': None, 'temp': None, 'weather': [{'description': 'Invalid location'}]}]
+
+def test_get_weather_history_no_history_data(client):
+    location = 'Test Location'
+    
+    geocode_response = [{'lat': 10.0, 'lon': 20.0}]
+    history_response = {}
+    
+    with client.application.app_context():
+        with patch('requests.get') as mock_get:
+            # Mock the geocode and history responses
+            mock_get.side_effect = [
+                MockResponse(geocode_response, 200),
+                MockResponse(history_response, 200),
+                MockResponse(history_response, 200),
+                MockResponse(history_response, 200),
+                MockResponse(history_response, 200),
+                MockResponse(history_response, 200)
+            ]
+            
+            result = get_weather_history(location)
+
+            assert result == [{'dt': None, 'temp': None, 'weather': [{'description': 'No historical data available'}]}]
+
+# Additional tests for get_weather_data function
+
+
+def test_get_weather_data_no_location_or_coordinates(client):
+    with client.application.app_context():
+        result = get_weather_data()
+        assert 'error' in result
+        assert result['error'] == 'Location or coordinates are required'
+
+def test_get_weather_data_invalid_location(client):
+    location = 'InvalidLocation'
+    
+    weather_response = {'cod': '404', 'message': 'city not found'}
+    
+    with client.application.app_context():
+        with patch('requests.get') as mock_get:
+            mock_get.return_value = MockResponse(weather_response, 404)
+            
+            result = get_weather_data(location=location)
+            
+            assert 'error' in result
+            assert result['error'] == 'Invalid location or no data available'
+
+class MockResponse:
+    def __init__(self, json_data, status_code):
+        self.json_data = json_data
+        self.status_code = status_code
+
+    def json(self):
+        return self.json_data

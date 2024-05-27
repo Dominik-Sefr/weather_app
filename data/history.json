@@ -1263,5 +1263,95 @@
             "description": "sunny",
             "date": "2024-05-24 10:55:12"
         }
+    ],
+    "202": [
+        {
+            "city": "Berlin",
+            "country": "Germany",
+            "temperature": 20.0,
+            "description": "sunny",
+            "date": "2024-05-27 13:43:02"
+        }
+    ],
+    "209": [
+        {
+            "city": "Berlin",
+            "country": "Germany",
+            "temperature": 20.0,
+            "description": "sunny",
+            "date": "2024-05-27 13:47:39"
+        }
+    ],
+    "216": [
+        {
+            "city": "Berlin",
+            "country": "Germany",
+            "temperature": 20.0,
+            "description": "sunny",
+            "date": "2024-05-27 13:52:06"
+        }
+    ],
+    "223": [
+        {
+            "city": "Berlin",
+            "country": "Germany",
+            "temperature": 20.0,
+            "description": "sunny",
+            "date": "2024-05-27 13:55:42"
+        }
+    ],
+    "230": [
+        {
+            "city": "Berlin",
+            "country": "Germany",
+            "temperature": 20.0,
+            "description": "sunny",
+            "date": "2024-05-27 13:58:33"
+        }
+    ],
+    "237": [
+        {
+            "city": "Berlin",
+            "country": "Germany",
+            "temperature": 20.0,
+            "description": "sunny",
+            "date": "2024-05-27 13:58:55"
+        }
+    ],
+    "244": [
+        {
+            "city": "Berlin",
+            "country": "Germany",
+            "temperature": 20.0,
+            "description": "sunny",
+            "date": "2024-05-27 14:03:26"
+        }
+    ],
+    "251": [
+        {
+            "city": "Berlin",
+            "country": "Germany",
+            "temperature": 20.0,
+            "description": "sunny",
+            "date": "2024-05-27 14:04:41"
+        }
+    ],
+    "258": [
+        {
+            "city": "Berlin",
+            "country": "Germany",
+            "temperature": 20.0,
+            "description": "sunny",
+            "date": "2024-05-27 14:07:49"
+        }
+    ],
+    "265": [
+        {
+            "city": "Berlin",
+            "country": "Germany",
+            "temperature": 20.0,
+            "description": "sunny",
+            "date": "2024-05-27 14:08:02"
+        }
     ]
 }
